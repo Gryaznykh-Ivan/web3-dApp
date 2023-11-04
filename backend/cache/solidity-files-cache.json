@@ -1,0 +1,40 @@
+{
+  "_format": "hh-sol-cache-2",
+  "files": {
+    "C:\\Users\\gryaz\\Desktop\\web3-dApp\\backend\\contracts\\dApp.sol": {
+      "lastModificationDate": 1699133648977,
+      "contentHash": "38d3d2964f9459577a14fe84772cadb1",
+      "sourceName": "contracts/dApp.sol",
+      "solcConfig": {
+        "version": "0.8.19",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.19"
+      ],
+      "artifacts": [
+        "LastMessageDApp"
+      ]
+    }
+  }
+}

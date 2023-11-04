@@ -3,9 +3,131 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Web3 dApp</title>
+    <title>DECENTRALIZED APPLICATION</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/4.2.2/web3.min.js"></script>
+    <script src="
+    https://cdn.jsdelivr.net/npm/@alch/alchemy-web3@1.4.7/dist/alchemyWeb3.min.js
+    "></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        padding: 0px;
+        margin: 0px;
+      }
+    </style>
   </head>
-  <body>
-    <div class="">HELLO WORLD</div>
+  <body class="bg-black/90 text-green-500">
+    <div class="flex items-center justify-center w-full h-full">
+      <div class="flex flex-col w-96 space-y-8">
+        <div class="text-2xl font-bold text-center uppercase">
+          Decentralized Application
+        </div>
+        <div class="">
+          <div class="mb-1">Последнее оставленное сообщение:</div>
+          <div class="p-3 bg-white rounded-md text-black text-center h-[48px]" id="message"></div>
+        </div>
+        <div class="flex flex-col gap-2">
+          <div class="flex flex-col">
+            <div class="">Оставить сообщение:</div>
+            <textarea
+              id="newMessage"
+              class="rounded-md border-gray-200 border-[1px] p-2 text-black outline-none"
+              rows="3"
+            ></textarea>
+          </div>
+          <button class="bg-green-500 rounded-md text-white py-2" onclick="sendMessage()">
+            Отправить
+          </button>
+        </div>
+      </div>
+    </div>
+    <script>
+      const web3 = AlchemyWeb3.createAlchemyWeb3(
+        "https://eth-goerli.alchemyapi.io/v2/8ujqnZlRl0ZNnFP6FIBRCVlvVUa6ua13"
+      );
+
+      const contractAddress = "0x410cB6FdC151521695bAC37002AFE471C393C70e";
+      const contractABI = [
+        {
+          inputs: [],
+          name: "getLastMessage",
+          outputs: [
+            {
+              internalType: "string",
+              name: "",
+              type: "string",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "lastMessage",
+          outputs: [
+            {
+              internalType: "string",
+              name: "",
+              type: "string",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "string",
+              name: "newMessage",
+              type: "string",
+            },
+          ],
+          name: "storeMessage",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+      ];
+
+      const contract = new web3.eth.Contract(contractABI, contractAddress);
+
+      async function storeMessage(newMessage) {
+        const accounts = await web3.eth.getAccounts();
+
+        await contract.methods
+          .storeMessage(newMessage)
+          .send({ from: accounts[0] });
+      }
+
+      async function getLastMessage() {
+        return await contract.methods.getLastMessage().call();
+      }
+
+      async function sendMessage() {
+        const new_message_element = document.querySelector('#newMessage')
+        const message = new_message_element.value;
+
+        try {
+          await storeMessage(message)
+          await updateMessageBlock()
+        } catch (e) {
+          alert("Произошла ошибка во время отправки транзакции!")
+        }
+      }
+
+      async function updateMessageBlock() {
+        const actualMessage = await getLastMessage();
+        
+        const message_element = document.querySelector('#message')
+        message_element.innerHTML = actualMessage
+      }
+
+      setInterval(updateMessageBlock, 30000);
+
+      window.onload = updateMessageBlock;
+    </script>
   </body>
 </html>
